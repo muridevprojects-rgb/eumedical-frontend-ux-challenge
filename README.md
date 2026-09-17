@@ -4,6 +4,10 @@ Propuesta frontend para el challenge técnico de Eumedical. El proyecto incluye 
 
 ## Demo
 
+**Live demo:** https://eumedical-frontend-ux-challenge.vercel.app
+
+**Patient portal:** https://eumedical-frontend-ux-challenge.vercel.app/patient
+
 La aplicación contiene dos experiencias principales:
 
 - `/` — landing institucional
