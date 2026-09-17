@@ -1,16 +1,49 @@
 import { useState } from 'react'
-import { Camera, CheckCircle2, Clock3, Mic, ShieldCheck, Video, Wifi } from 'lucide-react'
+import {
+  CalendarDays,
+  Camera,
+  CheckCircle2,
+  Clock3,
+  Mic,
+  ShieldCheck,
+  Video,
+  Wifi,
+} from 'lucide-react'
+import EmptyState from '../../components/ui/EmptyState'
 import { upcomingAppointments } from '../../features/patient/data/mockPatient'
 
 function AppointmentsPage() {
   const [showPreparation, setShowPreparation] = useState(false)
   const appointment = upcomingAppointments[0]
 
+  if (!appointment) {
+    return (
+      <div className="space-y-8">
+        <section>
+          <p className="text-sm font-semibold text-eu-aqua">Consultas</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight">
+            Próximas consultas
+          </h1>
+          <p className="mt-3 text-eu-blue/65">
+            Consulta los detalles de tu próxima cita y prepara tu dispositivo antes de entrar.
+          </p>
+        </section>
+        <EmptyState
+          icon={CalendarDays}
+          title="No hay consultas programadas"
+          description="Cuando se programe una nueva consulta, podrás ver aquí todos los detalles y preparar tu teleconsulta."
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-8">
       <section>
         <p className="text-sm font-semibold text-eu-aqua">Consultas</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Próximas consultas</h1>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight">
+          Próximas consultas
+        </h1>
         <p className="mt-3 text-eu-blue/65">
           Consulta los detalles de tu próxima cita y prepara tu dispositivo antes de entrar.
         </p>
@@ -22,8 +55,12 @@ function AppointmentsPage() {
             <span className="inline-flex rounded-full bg-eu-aqua-light px-3 py-1 text-xs font-semibold">
               {appointment.status}
             </span>
-            <h2 className="mt-4 text-2xl font-semibold">{appointment.date} · {appointment.time}</h2>
-            <p className="mt-2 text-eu-blue/70">{appointment.doctor} · {appointment.specialty}</p>
+            <h2 className="mt-4 text-2xl font-semibold">
+              {appointment.date} · {appointment.time}
+            </h2>
+            <p className="mt-2 text-eu-blue/70">
+              {appointment.doctor} · {appointment.specialty}
+            </p>
             <p className="mt-1 text-sm text-eu-blue/55">{appointment.reason}</p>
           </div>
 
@@ -39,11 +76,16 @@ function AppointmentsPage() {
       </article>
 
       {showPreparation && (
-        <section className="rounded-3xl bg-eu-blue p-6 text-white sm:p-8" aria-labelledby="preparation-title">
+        <section
+          className="rounded-3xl bg-eu-blue p-6 text-white sm:p-8"
+          aria-labelledby="preparation-title"
+        >
           <div className="flex items-start justify-between gap-6">
             <div>
               <p className="text-sm font-semibold text-eu-yellow">Comprobación previa</p>
-              <h2 id="preparation-title" className="mt-2 text-2xl font-semibold">Todo listo para tu teleconsulta</h2>
+              <h2 id="preparation-title" className="mt-2 text-2xl font-semibold">
+                Todo listo para tu teleconsulta
+              </h2>
             </div>
             <ShieldCheck className="h-8 w-8 shrink-0 text-eu-aqua-light" aria-hidden="true" />
           </div>

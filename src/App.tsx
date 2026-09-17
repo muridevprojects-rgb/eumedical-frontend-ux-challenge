@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import PatientLayout from './features/patient/components/PatientLayout'
 import HomePage from './pages/HomePage'
+import NotFoundPage from './pages/NotFoundPage'
 import AppointmentsPage from './pages/patient/AppointmentsPage'
 import DashboardPage from './pages/patient/DashboardPage'
 import DocumentsPage from './pages/patient/DocumentsPage'
@@ -23,6 +24,7 @@ function App() {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="support" element={<SupportPage />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   )
