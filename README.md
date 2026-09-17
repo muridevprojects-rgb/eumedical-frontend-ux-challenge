@@ -4,9 +4,11 @@ Propuesta frontend para el challenge técnico de Eumedical. El proyecto incluye 
 
 ## Demo
 
-**Live demo:** https://eumedical-frontend-ux-challenge.vercel.app
+**Live demo:**  
+https://eumedical-frontend-ux-challenge.vercel.app
 
-**Patient portal:** https://eumedical-frontend-ux-challenge.vercel.app/patient
+**Patient portal:**  
+https://eumedical-frontend-ux-challenge.vercel.app/patient
 
 La aplicación contiene dos experiencias principales:
 
@@ -40,6 +42,14 @@ Todas las personas, consultas, documentos, prescripciones y datos clínicos most
 - Perfil
 - Soporte
 - Navegación responsive para desktop y mobile
+- Estados vacíos para consultas, historial, documentos y prescripciones
+
+### Experiencia general
+
+- Página 404 personalizada para rutas inexistentes
+- Navegación mediante React Router
+- Estados de interacción y foco visible
+- Datos ficticios centralizados mediante mocks
 
 ## Stack
 
@@ -63,13 +73,15 @@ src/
 ├── assets/
 │   └── brand/
 ├── components/
-│   └── layout/
+│   ├── layout/
+│   └── ui/
 ├── features/
 │   └── patient/
 │       ├── components/
 │       └── data/
 ├── pages/
-│   └── patient/
+│   ├── patient/
+│   └── NotFoundPage.tsx
 ├── styles/
 ├── test/
 ├── App.tsx
@@ -78,6 +90,8 @@ src/
 ```
 
 La landing utiliza componentes de layout compartidos. El área del paciente se organiza como una feature independiente con layout propio, rutas anidadas y datos mock centralizados.
+
+El componente reutilizable `EmptyState` permite representar de forma consistente situaciones en las que todavía no existen datos disponibles.
 
 ## Rutas
 
@@ -90,6 +104,7 @@ La landing utiliza componentes de layout compartidos. El área del paciente se o
 /patient/prescriptions
 /patient/profile
 /patient/support
+* — fallback para rutas inexistentes / página 404
 ```
 
 ## Instalación
@@ -138,7 +153,7 @@ Este comando valida:
 - ESLint
 - cobertura de tipos
 
-En la versión validada durante el desarrollo, la cobertura de tipos alcanzó el 100%.
+Durante el desarrollo, la cobertura de tipos alcanzó el 100%.
 
 ## Tests
 
@@ -161,7 +176,7 @@ Actualmente se incluyen tests esenciales para:
 npm run build
 ```
 
-El build ejecuta primero `tsc --noEmit` y luego genera la aplicación con Vite.
+El build ejecuta primero `tsc --noEmit` y posteriormente genera la aplicación mediante Vite.
 
 ## Accesibilidad
 
@@ -188,17 +203,22 @@ Aqua claro:       #bfd7cd
 Azul claro:       #d9e4de
 Naranja:          #e79f1a
 Amarillo:         #efbc0b
+Blanco:           #ffffff
+Gris:             #f2f2f2
+Negro:            #000000
 ```
 
-El logo institucional se mantiene sin deformaciones y con un tamaño coherente con las indicaciones del BrandBook.
+El logo institucional se mantiene sin deformaciones y con un tamaño coherente con las indicaciones del Brand Book.
 
-Las fuentes propietarias indicadas en el BrandBook no se incluyeron porque sus archivos no fueron proporcionados. Para evitar incorporar assets sin licencia, se utilizó una fuente de sistema como fallback.
+Las fuentes propietarias indicadas en el Brand Book no se incluyeron porque sus archivos no fueron proporcionados. Para evitar incorporar assets sin licencia, se utilizaron alternativas disponibles en el sistema manteniendo una jerarquía visual coherente con la identidad de la marca.
 
 ## Decisiones técnicas
 
 ### React Router
 
 Se utilizó `BrowserRouter` con rutas anidadas para el portal del paciente. Esto permite mantener un layout común y cambiar únicamente el contenido principal.
+
+También se incorporó una ruta fallback mediante `*` para mostrar una página 404 personalizada cuando una dirección no existe.
 
 ### Datos mock
 
@@ -212,7 +232,22 @@ Esto evita mezclar datos ficticios directamente con la presentación y facilita 
 
 ### Estado local
 
-No se incorporó una librería global de estado porque el alcance actual no lo requiere. El estado interactivo utilizado —por ejemplo, menú mobile o preparación de teleconsulta— es local al componente.
+No se incorporó una librería global de estado porque el alcance actual no lo requiere.
+
+El estado interactivo utilizado —por ejemplo, menú mobile o preparación de teleconsulta— es local a los componentes que lo necesitan.
+
+### Empty states
+
+Se creó un componente reutilizable para representar situaciones en las que el paciente todavía no dispone de determinada información.
+
+Se utiliza para:
+
+- próximas consultas
+- historial
+- documentos
+- prescripciones
+
+Esto evita interfaces vacías o ambiguas y proporciona al usuario una explicación clara.
 
 ### Sin backend
 
@@ -220,7 +255,7 @@ No se añadió una API ficticia compleja ni servicios externos. Para este challe
 
 ## Problemas encontrados durante el desarrollo
 
-Durante la preparación del proyecto se detectaron y resolvieron varios problemas reales:
+Durante la preparación del proyecto se detectaron y resolvieron varios problemas reales.
 
 ### PowerShell bloqueaba npm
 
@@ -258,7 +293,7 @@ Se mantuvo la minificación estándar de Vite eliminando la exigencia explícita
 
 ### ESLint y React Hooks
 
-La configuración generada esperaba una propiedad distinta de la disponible en la versión instalada de `eslint-plugin-react-hooks`.
+La configuración inicial esperaba una propiedad distinta de la disponible en la versión instalada de `eslint-plugin-react-hooks`.
 
 Se ajustó para utilizar la configuración `recommended-latest`.
 
@@ -267,6 +302,12 @@ Se ajustó para utilizar la configuración `recommended-latest`.
 Un test del Header encontró dos botones con el mismo nombre porque el DOM del test anterior no había sido limpiado.
 
 Se añadió `cleanup()` después de cada test.
+
+### Routing SPA en Vercel
+
+Al utilizar `BrowserRouter`, el acceso directo o la actualización de una ruta interna como `/patient` necesitaba que Vercel devolviera la aplicación principal.
+
+Se añadió una configuración de rewrite mediante `vercel.json` para permitir que React Router resuelva correctamente las rutas internas.
 
 ## Cambios sobre la configuración inicial
 
@@ -278,6 +319,7 @@ Se realizaron únicamente ajustes necesarios para disponer de una base estable:
 - configuración compatible de ESLint
 - configuración de Tailwind
 - configuración de Vitest
+- configuración del routing SPA para Vercel
 
 No se utilizó `npm audit fix --force` para evitar introducir actualizaciones destructivas sin necesidad.
 
@@ -290,21 +332,23 @@ Esta entrega es una demostración frontend. En un producto real todavía sería 
 - API médica segura
 - gestión real de documentos
 - prescripciones reales
-- videollamada/teleconsulta
-- estados de carga, error y empty state conectados a datos reales
+- videollamada / teleconsulta
+- estados de carga y error conectados a una API real
 - protección de datos y requisitos regulatorios
 - internacionalización completa
+- gestión segura de sesiones y permisos
 
 ## Posibles mejoras
 
 Con más tiempo, las siguientes mejoras serían prioritarias:
 
 - tests de accesibilidad automatizados
-- test end-to-end de los flujos principales
+- tests end-to-end de los flujos principales
 - lazy loading por ruta
 - internacionalización
 - skeletons y estados de carga
-- integración con API
+- estados de error vinculados a una API
+- integración con backend
 - autenticación
 - métricas de performance
 - auditoría Lighthouse
@@ -312,13 +356,13 @@ Con más tiempo, las siguientes mejoras serían prioritarias:
 
 ## Uso de IA
 
-Se utilizó IA como herramienta de apoyo durante el proceso de desarrollo para análisis, debugging, revisión de código, documentación y generación de propuestas de implementación.
+Se utilizaron herramientas de IA como apoyo durante el desarrollo, principalmente para análisis, debugging, revisión técnica y documentación.
 
-Las decisiones técnicas, la estructura final, el comportamiento de la interfaz y los cambios aplicados fueron revisados y validados dentro del proyecto. La aplicación puede explicarse y mantenerse sin depender de código generado en tiempo de ejecución por IA.
+La implementación final, las decisiones técnicas y el comportamiento de la aplicación fueron revisados, ejecutados y validados dentro del proyecto. El código y las decisiones adoptadas pueden explicarse y mantenerse de forma independiente.
 
 ## Validación realizada
 
-Antes de preparar la entrega se validaron:
+Durante el desarrollo se utilizaron las siguientes comprobaciones:
 
 ```text
 npm test
@@ -326,7 +370,7 @@ npm run quality-check
 npm run build
 ```
 
-Resultado final de los tests esenciales:
+En una de las validaciones completas realizadas durante el desarrollo se obtuvo:
 
 ```text
 3 test files passed
@@ -335,6 +379,26 @@ Resultado final de los tests esenciales:
 
 La aplicación también fue revisada manualmente en desktop y mobile.
 
+Se comprobaron además:
+
+- navegación principal
+- menú mobile
+- rutas del área del paciente
+- acceso directo a `/patient`
+- página 404
+- comportamiento responsive
+- navegación en producción mediante Vercel
+
+## Deploy
+
+La aplicación se encuentra desplegada públicamente mediante Vercel:
+
+https://eumedical-frontend-ux-challenge.vercel.app
+
+Repositorio del proyecto:
+
+https://github.com/muridevprojects-rgb/eumedical-frontend-ux-challenge
+
 ## Autor
 
-Murilo
+Murilo Caio
